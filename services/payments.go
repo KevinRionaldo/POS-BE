@@ -30,10 +30,10 @@ func CreatePayment(c *gin.Context) {
 	}
 
 	// Load zona waktu Jakarta
-	loc, _ := time.LoadLocation("Asia/Jakarta")
+	// loc, _ := time.LoadLocation("Asia/Jakarta")
 
 	//convert time from string to time.Time
-	expiryTime, err := time.ParseInLocation("2006-01-02 15:04:05", body.ExpiryTime, loc)
+	expiryTime, err := time.Parse("2006-01-02 15:04:05", body.ExpiryTime)
 	if err != nil {
 		log.Err(err).Msg("error parse expiry time")
 	}
@@ -41,7 +41,7 @@ func CreatePayment(c *gin.Context) {
 
 	var settlementTimeUTC *time.Time
 	if body.SettlementTime != nil {
-		settlementTimeParse, err := time.ParseInLocation("2006-01-02 15:04:05", *body.SettlementTime, loc)
+		settlementTimeParse, err := time.Parse("2006-01-02 15:04:05", *body.SettlementTime)
 		if err != nil {
 			log.Err(err).Msg("error parse settlement time")
 		}
