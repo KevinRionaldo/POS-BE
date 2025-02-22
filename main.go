@@ -2,7 +2,6 @@ package main
 
 import (
 	"POS-BE/services"
-	"net/http"
 
 	"github.com/gin-gonic/gin"
 )
@@ -10,25 +9,26 @@ import (
 func main() {
 	// albums slice to seed record album data.
 	r := gin.Default()
-	r.GET("/ping", func(c *gin.Context) {
-		c.JSON(http.StatusOK, gin.H{
-			"message": "pong",
-		})
-	})
 
-	//albums RESTAPI
-	r.GET("/albums", services.GetAlbums)
-	r.POST("/albums", services.PostAlbums)
-	r.PUT("/albums/:id", services.PutAlbums)
-	r.DELETE("/albums/:id", services.DeleteAlbums)
+	//categories RESTAPI
+	r.POST("/categories", services.CreateCategories)
+	r.GET("/categories", services.GetCategories)
+	r.PUT("/categories/:id", services.UpdateCategories)
+	r.DELETE("/categories/:id", services.DeleteCategories)
+
+	//products RESTAPI
+	r.POST("/products", services.CreateProducts)
+	r.GET("/products", services.GetProducts)
+	r.PUT("/products/:id", services.UpdateProducts)
+	r.DELETE("/products/:id", services.DeleteProducts)
 
 	//transactions RESTAPI
-	r.POST("/start-transactions", services.StartTransaction)
+	r.POST("/transactions/start", services.StartTransaction)
 	r.GET("/transactions", services.GetTransactions)
 	r.GET("/transactions/:id", services.GetTransactionsByID)
+
 	//payments RESTAPI
 	r.POST("/payments", services.CreatePayment)
 
-	// r.Run("localhost:4000") // listen and serve on 0.0.0.0:8080 (for windows "localhost:8080")
 	r.Run(":4000") // listen and serve on 0.0.0.0:8080 (for windows "localhost:8080")
 }

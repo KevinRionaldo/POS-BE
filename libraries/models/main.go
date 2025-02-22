@@ -7,11 +7,53 @@ import (
 
 var schema = config.CurrentSchema()
 
+// Categories model
+type Categories struct {
+	Categories_id string    `gorm:"primaryKey;not null" json:"categories_id"`
+	Name          string    `json:"name"`
+	Created_at    time.Time `json:"created_at" gorm:"autoCreateTime"`
+	Updated_at    time.Time `json:"updated_at" gorm:"autoUpdateTime"`
+	Created_by    *string   `json:"-"`
+	Updated_by    *string   `json:"-"`
+}
+
+func (Categories) TableName() string { return schema + ".categories" }
+
+// Product model
+type Product struct {
+	Product_id    string    `gorm:"primaryKey;not null" json:"product_id"`
+	Categories_id *string   `json:"categories_id"`
+	Name          string    `json:"name"`
+	Stock         int64     `json:"stock"`
+	Price         float64   `json:"price"`
+	Image         *string   `json:"image"`
+	Created_at    time.Time `json:"created_at" gorm:"autoCreateTime"`
+	Updated_at    time.Time `json:"updated_at" gorm:"autoUpdateTime"`
+	Created_by    *string   `json:"-"`
+	Updated_by    *string   `json:"-"`
+}
+
+func (Product) TableName() string { return schema + ".product" }
+
+// Transaction_product model
+type Transaction_product struct {
+	Transaction_product_id string    `gorm:"primaryKey;not null" json:"transaction_product_id"`
+	Transaction_id         string    `json:"transaction_id"`
+	Product_id             string    `json:"product_id"`
+	Quantity               int64     `json:"quantity"`
+	Total_price            float64   `json:"total_price"`
+	Created_at             time.Time `json:"created_at" gorm:"autoCreateTime"`
+	Updated_at             time.Time `json:"updated_at" gorm:"autoUpdateTime"`
+	Created_by             *string   `json:"-"`
+	Updated_by             *string   `json:"-"`
+}
+
+func (Transaction_product) TableName() string { return schema + ".transaction_product" }
+
 // Transaction model
 type Transaction struct {
 	Transaction_id string    `gorm:"primaryKey;not null" json:"transaction_id"`
 	User_id        *string   `json:"user_id"`
-	Status         string    `gorm:"not null" json:"status"`
 	Description    string    `json:"description"`
 	Created_at     time.Time `json:"created_at" gorm:"autoCreateTime"`
 	Updated_at     time.Time `json:"updated_at" gorm:"autoUpdateTime"`
@@ -21,6 +63,7 @@ type Transaction struct {
 
 func (Transaction) TableName() string { return schema + ".transaction" }
 
+// Payment model
 type Payment struct {
 	Payment_id             string     `gorm:"primaryKey;not null" json:"payment_id"`
 	Transaction_id         string     `json:"transaction_id"`
@@ -41,11 +84,3 @@ type Payment struct {
 }
 
 func (Payment) TableName() string { return schema + ".payment" }
-
-// album represents data about a record album.
-type Album struct {
-	ID     string  `json:"id"`
-	Title  string  `json:"title"`
-	Artist string  `json:"artist"`
-	Price  float64 `json:"price"`
-}

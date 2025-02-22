@@ -20,6 +20,7 @@ func CreatePayment(c *gin.Context) {
 	if err := c.BindJSON(&body); err != nil {
 		log.Err(err).Msg("error parse body")
 		c.IndentedJSON(http.StatusBadRequest, gin.H{"message": apiResponse.GeneralErrorResponse(err)})
+		return
 	}
 
 	//convert amout from string to float64
@@ -74,6 +75,7 @@ func CreatePayment(c *gin.Context) {
 	createPayment := db.Model(&paymentData).Clauses(clause.Returning{}).Create(&paymentData)
 	if createPayment.Error != nil {
 		log.Err(createPayment.Error).Msg("error create payment")
+		c.IndentedJSON(http.StatusBadRequest, gin.H{"message": apiResponse.DBErrorResponse(createPayment.Error)})
 	}
 	c.IndentedJSON(http.StatusCreated, gin.H{"message": apiResponse.SuccessSingularResponse(paymentData)})
 }
