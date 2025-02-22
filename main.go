@@ -26,5 +26,6 @@ func main() {
 	r.POST("/start-transactions", services.StartTransaction)
 	r.GET("/transactions", services.GetTransactions)
 
-	r.Run("localhost:4000") // listen and serve on 0.0.0.0:8080 (for windows "localhost:8080")
+	// r.Run("localhost:4000") // listen and serve on 0.0.0.0:8080 (for windows "localhost:8080")
+	r.Run(":4000") // listen and serve on 0.0.0.0:8080 (for windows "localhost:8080")
 }
