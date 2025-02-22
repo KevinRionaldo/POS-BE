@@ -17,7 +17,7 @@ import (
 func CreatePayment(c *gin.Context) {
 	//parse body string to object
 	body := midtransService.MidtransNotification{}
-	log.Info().Any("event", c).Msg("log event")
+	log.Info().Any("body", c.Request.Body).Msg("log event")
 	if err := c.BindJSON(&body); err != nil {
 		c.IndentedJSON(http.StatusBadRequest, gin.H{"message": apiResponse.GeneralErrorResponse(err)})
 	}
