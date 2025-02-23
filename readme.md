@@ -107,7 +107,7 @@ This project has been deployed on **Railway.com**.
 
 ## API Documentation
 You can find the deployed API documentation and test the endpoints here:
-[Postman API Documentation](https://postman.com)
+[Postman API Documentation](https://documenter.getpostman.com/view/25657833/2sAYdcrY28)
 
 ---
 If you have any questions or issues, feel free to contribute or raise an issue in the repository. Happy coding! 🚀
