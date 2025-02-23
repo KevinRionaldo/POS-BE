@@ -30,9 +30,6 @@ func CreatePayment(c *gin.Context) {
 		return
 	}
 
-	// Load zona waktu Jakarta
-	// loc, _ := time.LoadLocation("Asia/Jakarta")
-
 	//convert time from string to time.Time
 	expiryTime, err := time.Parse("2006-01-02 15:04:05", body.ExpiryTime)
 	if err != nil {

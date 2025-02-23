@@ -35,6 +35,19 @@ type Product struct {
 
 func (Product) TableName() string { return schema + ".product" }
 
+// Transaction model
+type Transaction struct {
+	Transaction_id string    `gorm:"primaryKey;not null" json:"transaction_id"`
+	User_id        *string   `json:"user_id"`
+	Description    string    `json:"description"`
+	Created_at     time.Time `json:"created_at" gorm:"autoCreateTime"`
+	Updated_at     time.Time `json:"updated_at" gorm:"autoUpdateTime"`
+	Created_by     *string   `json:"-"`
+	Updated_by     *string   `json:"-"`
+}
+
+func (Transaction) TableName() string { return schema + ".transaction" }
+
 // Transaction_product model
 type Transaction_product struct {
 	Transaction_product_id string    `gorm:"primaryKey;not null" json:"transaction_product_id"`
@@ -49,19 +62,6 @@ type Transaction_product struct {
 }
 
 func (Transaction_product) TableName() string { return schema + ".transaction_product" }
-
-// Transaction model
-type Transaction struct {
-	Transaction_id string    `gorm:"primaryKey;not null" json:"transaction_id"`
-	User_id        *string   `json:"user_id"`
-	Description    string    `json:"description"`
-	Created_at     time.Time `json:"created_at" gorm:"autoCreateTime"`
-	Updated_at     time.Time `json:"updated_at" gorm:"autoUpdateTime"`
-	Created_by     *string   `json:"-"`
-	Updated_by     *string   `json:"-"`
-}
-
-func (Transaction) TableName() string { return schema + ".transaction" }
 
 // Payment model
 type Payment struct {

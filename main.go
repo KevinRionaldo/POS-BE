@@ -27,6 +27,12 @@ func main() {
 	r.GET("/transactions", services.GetTransactions)
 	r.GET("/transactions/:id", services.GetTransactionsByID)
 
+	//transactionProduct RESTAPI
+	r.POST("/transactionProducts", services.CreateTransactionProduct)
+	r.GET("/transactionProducts", services.GetTransactionProduct)
+	r.PUT("/transactionProducts/:id", services.UpdateTransactionProduct)
+	r.DELETE("/transactionProducts/:id", services.DeleteTransactionProduct)
+
 	//payments RESTAPI
 	r.POST("/payments", services.CreatePayment)
 

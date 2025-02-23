@@ -16,6 +16,7 @@ import (
 	"gorm.io/gorm/clause"
 )
 
+// Struct representing a transaction with additional payment details
 type transactionType struct {
 	models.Transaction
 	Payment_method     string     `gorm:"not null" json:"payment_method"`
@@ -27,49 +28,56 @@ type transactionType struct {
 	Settlement_time    *time.Time `json:"settlement_time"`
 }
 
+// Start a new transaction
 func StartTransaction(c *gin.Context) {
+	// Struct to parse request body
 	type bodyType struct {
-		Amount      *int64 `json:"amount"`
-		Description string `json:"description"`
+		Amount      *int64 `json:"amount"`      // Transaction amount
+		Description string `json:"description"` // Transaction description
 	}
 
+	// Generate a unique transaction ID
 	transactionID := string(uuid.NewString())
-	log.Info().Any("transactionID", transactionID).Msg("log transaction ID")
-	// Call BindJSON to bind the received JSON to
-	// body data.
+
+	// Bind the received JSON to bodyType
 	body := bodyType{}
 	if err := c.BindJSON(&body); err != nil || body.Amount == nil {
 		c.IndentedJSON(http.StatusBadGateway, gin.H{"message": err.Error()})
 		return
 	}
 
-	//declare transaction data
+	// Define transaction data
 	transactionData := models.Transaction{
 		Transaction_id: transactionID,
 		Description:    body.Description,
 	}
 
+	// Insert transaction record into the database
 	createTransaction := db.Model(&transactionData).Clauses(clause.Returning{}).Create(&transactionData)
 	if createTransaction.Error != nil {
-		log.Err(createTransaction.Error).Msg("error create transaction")
+		log.Err(createTransaction.Error).Msg("error creating transaction")
 		c.IndentedJSON(http.StatusNotFound, gin.H{"message": apiResponse.GeneralErrorResponse(createTransaction.Error)})
 		return
 	}
 
+	// Call Midtrans API to initiate payment processing
 	midtransResp, midtransErr := midtransService.CreateTransaction(transactionID, *body.Amount)
 	if midtransErr != nil {
 		log.Err(midtransErr).Msg("midtrans error")
+		// If Midtrans fails, delete the transaction from the database
 		db.Model(&models.Transaction{}).Where("transaction_id = ?", transactionData.Transaction_id).Delete(&models.Transaction{})
 		c.IndentedJSON(http.StatusNotFound, gin.H{"message": apiResponse.GeneralErrorResponse(midtransErr)})
 		return
 	}
 
+	// Define response data structure
 	type responseDataType struct {
 		models.Transaction
 		GatewayTransactionToken string `json:"gateway_transaction_token"`
 		Redirect_URL            string `json:"redirect_URL"`
 	}
 
+	// Return successful transaction response
 	c.IndentedJSON(http.StatusOK, gin.H{"message": apiResponse.SuccessSingularResponse(responseDataType{
 		Transaction:             transactionData,
 		GatewayTransactionToken: midtransResp.Token,
@@ -77,13 +85,14 @@ func StartTransaction(c *gin.Context) {
 	})})
 }
 
+// Retrieve a paginated list of transactions
 func GetTransactions(c *gin.Context) {
-	//pagination
+	// Set pagination parameters
 	page, limit := paging.SetPageLimit(c.Query("page"), c.Query("limit"))
 
 	listTransactions := []transactionType{}
 
-	//query builder for get transaction, and payment
+	// SQL query to fetch transactions with payment details
 	selectColumns := `DISTINCT ON(t.transaction_id) 
     t.*,
     p.payment_method,
@@ -96,11 +105,14 @@ func GetTransactions(c *gin.Context) {
         ELSE p."status"  
     END AS "status", 
     p.settlement_time`
+
+	// Create subquery to get transactions with payment details
 	getTransactionSubQuery := db.Select(selectColumns).
 		Table(config.GetTableNameOnCurrentSchema(`transaction as t`)).
 		Joins(fmt.Sprintf("LEFT JOIN %s ON p.transaction_id = t.transaction_id", config.GetTableNameOnCurrentSchema("payment p"))).
 		Order("t.transaction_id, t.created_at desc, p.created_at DESC")
 
+	// Final query to retrieve transactions with pagination
 	getTransaction := db.Select("*").
 		Table("(?) as subquery", getTransactionSubQuery).
 		Order("created_at DESC, transaction_id asc").
@@ -108,11 +120,12 @@ func GetTransactions(c *gin.Context) {
 		Find(&listTransactions)
 
 	if getTransaction.Error != nil {
-		log.Err(getTransaction.Error).Msg("error get transaction postgre")
+		log.Err(getTransaction.Error).Msg("error retrieving transactions from PostgreSQL")
 		c.IndentedJSON(http.StatusBadGateway, gin.H{"message": apiResponse.DBErrorResponse(getTransaction.Error)})
 		return
 	}
 
+	// Count total transactions
 	var totalTransaction int64
 	countTransaction := db.Select(`COUNT(DISTINCT t.transaction_id)`).
 		Table(config.GetTableNameOnCurrentSchema(`transaction as t`)).
@@ -120,21 +133,24 @@ func GetTransactions(c *gin.Context) {
 		Find(&totalTransaction)
 
 	if countTransaction.Error != nil {
-		log.Err(getTransaction.Error).Msg("error count transaction postgre")
+		log.Err(getTransaction.Error).Msg("error counting transactions in PostgreSQL")
 		c.IndentedJSON(http.StatusBadGateway, gin.H{"message": apiResponse.DBErrorResponse(countTransaction.Error)})
 		return
 	}
 
+	// Return paginated transaction list response
 	c.IndentedJSON(http.StatusOK, gin.H{"message": apiResponse.SuccessPluralResponse(listTransactions, totalTransaction, limit, page)})
 }
 
+// Retrieve transaction details by transaction ID
 func GetTransactionsByID(c *gin.Context) {
+	// Define query filter to get only settled payments
 	qryFilter := `t.transaction_id = $1 AND p.status = 'settlement'`
 	qryValue := []any{c.Param("id")}
 
 	transactionData := transactionType{}
 
-	//query builder for get transaction, payment, and generated token
+	// SQL query to fetch transaction and payment details
 	selectColumns := ` t.*,
     p.payment_method,
     p.acquire,
@@ -143,6 +159,8 @@ func GetTransactionsByID(c *gin.Context) {
     p.currency,
     p."status",
     p.settlement_time`
+
+	// Execute query
 	getTransaction := db.Select(selectColumns).
 		Table(config.GetTableNameOnCurrentSchema(`transaction as t`)).
 		Joins(fmt.Sprintf("LEFT JOIN %s ON p.transaction_id = t.transaction_id", config.GetTableNameOnCurrentSchema("payment p"))).
@@ -151,9 +169,11 @@ func GetTransactionsByID(c *gin.Context) {
 		Find(&transactionData)
 
 	if getTransaction.Error != nil {
-		log.Err(getTransaction.Error).Msg("error get transaction postgre")
+		log.Err(getTransaction.Error).Msg("error retrieving transaction details from PostgreSQL")
 		c.IndentedJSON(http.StatusBadGateway, gin.H{"message": apiResponse.DBErrorResponse(getTransaction.Error)})
 		return
 	}
+
+	// Return transaction details
 	c.IndentedJSON(http.StatusCreated, gin.H{"message": apiResponse.SuccessSingularResponse(transactionData)})
 }
