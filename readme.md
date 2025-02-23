@@ -5,7 +5,9 @@ This project is a **Point of Sales Backend (POS-BE)** built using **Gin Framewor
 ## Using Midtrans in Sandbox Mode
 
 You can use Midtrans in sandbox (development) mode for testing payments without using real transactions. To enable this, ensure your MIDTRANS_SERVER_KEY is set to the sandbox key provided by Midtrans.
+To receive payment status updates from Midtrans, configure the **Notification URL** in your Midtrans dashboard.
 
+![Midtrans Notification URL Setup](assets/midtransNotificationURLExample.png)
 For more details, visit the Midtrans Sandbox Documentation.
 
 ## Using CockroachDB PostgreSQL
