@@ -2,15 +2,13 @@
 
 This project is a **Point of Sales Backend (POS-BE)** built using **Gin Framework**, **PostgreSQL (CockroachDB)**, and **Midtrans** as the payment gateway.
 
-## Project Setup
-
-Using Midtrans in Sandbox Mode
+## Using Midtrans in Sandbox Mode
 
 You can use Midtrans in sandbox (development) mode for testing payments without using real transactions. To enable this, ensure your MIDTRANS_SERVER_KEY is set to the sandbox key provided by Midtrans.
 
 For more details, visit the Midtrans Sandbox Documentation.
 
-Using CockroachDB PostgreSQL for Free
+## Using CockroachDB PostgreSQL
 
 This project supports CockroachDB as the database, and you can use the free-tier version provided by CockroachDB. To get started:
 
@@ -19,6 +17,8 @@ Sign up for a free account at CockroachDB Cloud.
 Create a free PostgreSQL-compatible database.
 
 Set up the database connection using the provided connection string.
+
+## Project Setup
 
 ### 1. Set Environment Variables
 Create a `.env` file inside the `env` folder and set the required environment variables:
