@@ -76,7 +76,7 @@ func GetTransactionProduct(c *gin.Context) {
 		return
 	}
 
-	c.IndentedJSON(http.StatusCreated, gin.H{"message": apiResponse.SuccessPluralResponse(transactionProductData, totalTransactionProduct, limit, page)})
+	c.IndentedJSON(http.StatusOK, gin.H{"message": apiResponse.SuccessPluralResponse(transactionProductData, totalTransactionProduct, limit, page)})
 }
 
 func UpdateTransactionProduct(c *gin.Context) {
@@ -98,7 +98,7 @@ func UpdateTransactionProduct(c *gin.Context) {
 		return
 	}
 
-	c.IndentedJSON(http.StatusCreated, gin.H{"message": apiResponse.SuccessSingularResponse(transactionProductData)})
+	c.IndentedJSON(http.StatusOK, gin.H{"message": apiResponse.SuccessSingularResponse(transactionProductData)})
 }
 
 func DeleteTransactionProduct(c *gin.Context) {
@@ -113,5 +113,5 @@ func DeleteTransactionProduct(c *gin.Context) {
 		return
 	}
 
-	c.IndentedJSON(http.StatusCreated, gin.H{"message": apiResponse.SuccessSingularResponse(transactionProductData)})
+	c.IndentedJSON(http.StatusOK, gin.H{"message": apiResponse.SuccessSingularResponse(transactionProductData)})
 }

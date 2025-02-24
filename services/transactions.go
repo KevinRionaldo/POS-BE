@@ -175,5 +175,5 @@ func GetTransactionsByID(c *gin.Context) {
 	}
 
 	// Return transaction details
-	c.IndentedJSON(http.StatusCreated, gin.H{"message": apiResponse.SuccessSingularResponse(transactionData)})
+	c.IndentedJSON(http.StatusOK, gin.H{"message": apiResponse.SuccessSingularResponse(transactionData)})
 }

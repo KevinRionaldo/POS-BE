@@ -70,7 +70,7 @@ func GetProducts(c *gin.Context) {
 		return
 	}
 
-	c.IndentedJSON(http.StatusCreated, gin.H{"message": apiResponse.SuccessPluralResponse(productData, totalProduct, limit, page)})
+	c.IndentedJSON(http.StatusOK, gin.H{"message": apiResponse.SuccessPluralResponse(productData, totalProduct, limit, page)})
 }
 
 func UpdateProducts(c *gin.Context) {

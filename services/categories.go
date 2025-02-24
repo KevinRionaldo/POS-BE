@@ -60,7 +60,7 @@ func GetCategories(c *gin.Context) {
 		return
 	}
 
-	c.IndentedJSON(http.StatusCreated, gin.H{"message": apiResponse.SuccessPluralResponse(categoriesData, totalCategories, limit, page)})
+	c.IndentedJSON(http.StatusOK, gin.H{"message": apiResponse.SuccessPluralResponse(categoriesData, totalCategories, limit, page)})
 }
 
 func UpdateCategories(c *gin.Context) {
@@ -82,7 +82,7 @@ func UpdateCategories(c *gin.Context) {
 		return
 	}
 
-	c.IndentedJSON(http.StatusCreated, gin.H{"message": apiResponse.SuccessSingularResponse(categoriesData)})
+	c.IndentedJSON(http.StatusOK, gin.H{"message": apiResponse.SuccessSingularResponse(categoriesData)})
 }
 
 func DeleteCategories(c *gin.Context) {
@@ -97,5 +97,5 @@ func DeleteCategories(c *gin.Context) {
 		return
 	}
 
-	c.IndentedJSON(http.StatusCreated, gin.H{"message": apiResponse.SuccessSingularResponse(categoriesData)})
+	c.IndentedJSON(http.StatusOK, gin.H{"message": apiResponse.SuccessSingularResponse(categoriesData)})
 }
