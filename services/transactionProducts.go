@@ -98,6 +98,11 @@ func UpdateTransactionProduct(c *gin.Context) {
 		return
 	}
 
+	if updateTransactionProduct.RowsAffected == 0 {
+		c.IndentedJSON(http.StatusNotFound, gin.H{"message": "not found"})
+		return
+	}
+
 	c.IndentedJSON(http.StatusOK, gin.H{"message": apiResponse.SuccessSingularResponse(transactionProductData)})
 }
 
@@ -110,6 +115,11 @@ func DeleteTransactionProduct(c *gin.Context) {
 	if deleteTransactionProduct.Error != nil {
 		log.Err(deleteTransactionProduct.Error).Msg("error delete transactionProduct")
 		c.IndentedJSON(http.StatusBadRequest, gin.H{"message": apiResponse.DBErrorResponse(deleteTransactionProduct.Error)})
+		return
+	}
+
+	if deleteTransactionProduct.RowsAffected == 0 {
+		c.IndentedJSON(http.StatusNotFound, gin.H{"message": "not found"})
 		return
 	}
 

@@ -92,7 +92,12 @@ func UpdateProducts(c *gin.Context) {
 		return
 	}
 
-	c.IndentedJSON(http.StatusCreated, gin.H{"message": apiResponse.SuccessSingularResponse(productData)})
+	if updateProduct.RowsAffected == 0 {
+		c.IndentedJSON(http.StatusNotFound, gin.H{"message": "not found"})
+		return
+	}
+
+	c.IndentedJSON(http.StatusOK, gin.H{"message": apiResponse.SuccessSingularResponse(productData)})
 }
 
 func DeleteProducts(c *gin.Context) {
@@ -107,5 +112,10 @@ func DeleteProducts(c *gin.Context) {
 		return
 	}
 
-	c.IndentedJSON(http.StatusCreated, gin.H{"message": apiResponse.SuccessSingularResponse(productData)})
+	if deleteProduct.RowsAffected == 0 {
+		c.IndentedJSON(http.StatusNotFound, gin.H{"message": "not found"})
+		return
+	}
+
+	c.IndentedJSON(http.StatusOK, gin.H{"message": apiResponse.SuccessSingularResponse(productData)})
 }

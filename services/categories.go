@@ -82,6 +82,10 @@ func UpdateCategories(c *gin.Context) {
 		return
 	}
 
+	if updateCategories.RowsAffected == 0 {
+		c.IndentedJSON(http.StatusNotFound, gin.H{"message": "not found"})
+		return
+	}
 	c.IndentedJSON(http.StatusOK, gin.H{"message": apiResponse.SuccessSingularResponse(categoriesData)})
 }
 
@@ -94,6 +98,11 @@ func DeleteCategories(c *gin.Context) {
 	if deleteCategories.Error != nil {
 		log.Err(deleteCategories.Error).Msg("error delete categories")
 		c.IndentedJSON(http.StatusBadRequest, gin.H{"message": apiResponse.DBErrorResponse(deleteCategories.Error)})
+		return
+	}
+
+	if deleteCategories.RowsAffected == 0 {
+		c.IndentedJSON(http.StatusNotFound, gin.H{"message": "not found"})
 		return
 	}
 

@@ -103,7 +103,8 @@ func main() {
 			created_by VARCHAR NULL,
 			updated_by VARCHAR NULL,
 			CONSTRAINT transaction_product_product_fk FOREIGN KEY (product_id) REFERENCES %[1]s.product(product_id) ON DELETE CASCADE,
-			CONSTRAINT transaction_product_transaction_fk FOREIGN KEY (transaction_id) REFERENCES %[1]s.transaction(transaction_id) ON DELETE CASCADE
+			CONSTRAINT transaction_product_transaction_fk FOREIGN KEY (transaction_id) REFERENCES %[1]s.transaction(transaction_id) ON DELETE CASCADE,
+			UNIQUE INDEX transaction_product_unique (product_id ASC, transaction_id ASC
 		);
 		`, schema)
 
