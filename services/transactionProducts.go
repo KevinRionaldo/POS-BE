@@ -35,17 +35,17 @@ func CreateTransactionProduct(c *gin.Context) {
 
 func GetTransactionProduct(c *gin.Context) {
 	//get product by categories id filter
-	qryFilter := ""
+	qryFilter := "transaction_product_id IS NOT NULL"
 	qryValue := []any{}
 
 	//params filter for transaction id and product id
 	if c.Query("transaction_id") != "" {
 		qryValue = append(qryValue, c.Query("transaction_id"))
-		qryFilter += fmt.Sprintf("transaction_id = $%d", len(qryValue))
+		qryFilter += fmt.Sprintf(" AND transaction_id = $%d", len(qryValue))
 	}
 	if c.Query("product_id") != "" {
 		qryValue = append(qryValue, c.Query("product_id"))
-		qryFilter += fmt.Sprintf("product_id = $%d", len(qryValue))
+		qryFilter += fmt.Sprintf(" AND product_id = $%d", len(qryValue))
 	}
 
 	//pagination
