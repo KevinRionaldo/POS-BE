@@ -22,4 +22,5 @@ go.work
 node_modules
 .serverless
 
-*.env
+# dev env files
+/env/dev.env
