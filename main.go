@@ -45,5 +45,5 @@ func main() {
 		auth.POST("/payments", services.CreatePayment)
 	}
 
-	r.Run(":4000")
+	// r.Run(":4000")
 }
