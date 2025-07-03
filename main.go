@@ -1,40 +1,49 @@
 package main
 
 import (
+	"POS-BE/middlewares"
 	"POS-BE/services"
 
 	"github.com/gin-gonic/gin"
 )
 
 func main() {
-	// albums slice to seed record album data.
 	r := gin.Default()
 
-	//categories RESTAPI
-	r.POST("/categories", services.CreateCategories)
-	r.GET("/categories", services.GetCategories)
-	r.PUT("/categories/:id", services.UpdateCategories)
-	r.DELETE("/categories/:id", services.DeleteCategories)
+	// Public routes
+	r.POST("/login", services.Login)
+	r.POST("/register", services.Register)
 
-	//products RESTAPI
-	r.POST("/products", services.CreateProducts)
-	r.GET("/products", services.GetProducts)
-	r.PUT("/products/:id", services.UpdateProducts)
-	r.DELETE("/products/:id", services.DeleteProducts)
+	// Protected routes
+	auth := r.Group("/")
+	auth.Use(middlewares.Authorizer())
+	{
+		// Categories
+		auth.POST("/categories", services.CreateCategories)
+		auth.GET("/categories", services.GetCategories)
+		auth.PUT("/categories/:id", services.UpdateCategories)
+		auth.DELETE("/categories/:id", services.DeleteCategories)
 
-	//transactions RESTAPI
-	r.POST("/transactions/start", services.StartTransaction)
-	r.GET("/transactions", services.GetTransactions)
-	r.GET("/transactions/:id", services.GetTransactionsByID)
+		// Products
+		auth.POST("/products", services.CreateProducts)
+		auth.GET("/products", services.GetProducts)
+		auth.PUT("/products/:id", services.UpdateProducts)
+		auth.DELETE("/products/:id", services.DeleteProducts)
 
-	//transactionProduct RESTAPI
-	r.POST("/transactionProducts", services.CreateTransactionProduct)
-	r.GET("/transactionProducts", services.GetTransactionProduct)
-	r.PUT("/transactionProducts/:id", services.UpdateTransactionProduct)
-	r.DELETE("/transactionProducts/:id", services.DeleteTransactionProduct)
+		// Transactions
+		auth.POST("/transactions/start", services.StartTransaction)
+		auth.GET("/transactions", services.GetTransactions)
+		auth.GET("/transactions/:id", services.GetTransactionsByID)
 
-	//payments RESTAPI
-	r.POST("/payments", services.CreatePayment)
+		// Transaction Products
+		auth.POST("/transactionProducts", services.CreateTransactionProduct)
+		auth.GET("/transactionProducts", services.GetTransactionProduct)
+		auth.PUT("/transactionProducts/:id", services.UpdateTransactionProduct)
+		auth.DELETE("/transactionProducts/:id", services.DeleteTransactionProduct)
 
-	// r.Run(":4000") // listen and serve on 0.0.0.0:8080 (for windows "localhost:8080")
+		// Payments
+		auth.POST("/payments", services.CreatePayment)
+	}
+
+	r.Run(":4000")
 }

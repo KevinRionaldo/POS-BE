@@ -84,3 +84,17 @@ type Payment struct {
 }
 
 func (Payment) TableName() string { return schema + ".payment" }
+
+type User struct {
+	User_id    string    `gorm:"primaryKey;not null" json:"user_id"`
+	Name       *string   `json:"transaction_id"`
+	Email      string    `gorm:"not null" json:"email"`
+	Password   string    `gorm:"not null" json:"password"`
+	Role       *string   `json:"role"`
+	Created_at time.Time `json:"created_at" gorm:"autoCreateTime"`
+	Updated_at time.Time `json:"updated_at" gorm:"autoUpdateTime"`
+	Created_by *string   `json:"-"`
+	Updated_by *string   `json:"-"`
+}
+
+func (User) TableName() string { return schema + ".user" }

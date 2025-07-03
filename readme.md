@@ -2,6 +2,24 @@
 
 This project is a **Point of Sales Backend (POS-BE)** built using **Gin Framework**, **PostgreSQL (CockroachDB)**, and **Midtrans** as the payment gateway.
 
+## 🔐 API Authentication and Authorization
+
+This project implements **JWT-based authorization** using a custom `Authorizer` middleware to protect all API endpoints, except for login and registration.
+
+### Public Routes
+The following endpoints are accessible without authentication:
+- `POST /login`
+- `POST /register`
+
+
+### Protected Routes
+All other routes (such as `/categories`, `/products`, `/transactions`, `/payments`, etc.) are protected using the `Authorizer()` middleware. This means they require a valid JWT token in the `Authorization` header:
+
+The middleware verifies the token and extracts user claims before allowing access.
+
+> **Note:** Make sure to attach a valid JWT token when accessing the protected endpoints. Unauthorized requests will receive a `401 Unauthorized` response.
+
+
 ## Using Midtrans in Sandbox Mode
 
 You can use Midtrans in sandbox (development) mode for testing payments without using real transactions. To enable this, ensure your MIDTRANS_SERVER_KEY is set to the sandbox key provided by Midtrans.
@@ -81,7 +99,11 @@ POINT OF SALES BE
 │   ├── products.go
 │   ├── transactionProducts.go
 │   ├── transactions.go
-│
+│   ├── login.go
+|
+│── middlewares/ 
+|   |── auth.go# Custom middleware (including JWT Authorizer)
+|      
 │── main.go             # Main entry point of the application
 │── go.mod              # Go module file
 │── go.sum              # Dependency lock file
