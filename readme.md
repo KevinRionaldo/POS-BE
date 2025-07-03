@@ -102,7 +102,7 @@ POINT OF SALES BE
 │   ├── login.go
 |
 │── middlewares/ 
-|   |── auth.go# Custom middleware (including JWT Authorizer)
+|   |── auth.go        # Custom middleware (including JWT Authorizer)
 |      
 │── main.go             # Main entry point of the application
 │── go.mod              # Go module file
