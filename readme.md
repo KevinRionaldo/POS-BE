@@ -112,6 +112,7 @@ POINT OF SALES BE
 ```
 
 ### Explanation:
+- **middlewares/**: Contains custom middlewares, including JWT-based authorization (Authorizer()).
 - **libraries/**: Contains reusable components such as configuration, helpers, and API response handlers.
 - **models/**: Defines the database models.
 - **services/**: Contains the main business logic and service handlers.
