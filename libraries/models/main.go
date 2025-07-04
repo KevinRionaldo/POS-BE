@@ -87,7 +87,7 @@ func (Payment) TableName() string { return schema + ".payment" }
 
 type User struct {
 	User_id    string    `gorm:"primaryKey;not null" json:"user_id"`
-	Name       *string   `json:"transaction_id"`
+	Name       *string   `json:"name"`
 	Email      string    `gorm:"not null" json:"email"`
 	Password   string    `gorm:"not null" json:"password"`
 	Role       *string   `json:"role"`
