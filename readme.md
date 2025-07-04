@@ -102,7 +102,7 @@ POINT OF SALES BE
 │   ├── login.go
 |
 │── middlewares/ 
-|   |── auth.go# Custom middleware (including JWT Authorizer)
+|   |── auth.go        # Custom middleware (including JWT Authorizer)
 |      
 │── main.go             # Main entry point of the application
 │── go.mod              # Go module file
@@ -112,6 +112,7 @@ POINT OF SALES BE
 ```
 
 ### Explanation:
+- **middlewares/**: Contains custom middlewares, including JWT-based authorization (Authorizer()).
 - **libraries/**: Contains reusable components such as configuration, helpers, and API response handlers.
 - **models/**: Defines the database models.
 - **services/**: Contains the main business logic and service handlers.
